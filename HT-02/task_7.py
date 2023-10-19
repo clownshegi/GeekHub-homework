@@ -2,9 +2,6 @@
 
 my_list = [5, "яблоко", 17, "лук", "мандарин", 7]
 
-result_string = ""
-
-for item in my_list:
-    result_string += str(item)
+result_string = ''.join(map(str, my_list))
 
 print(result_string)

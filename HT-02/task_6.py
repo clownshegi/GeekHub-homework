@@ -6,7 +6,7 @@ user_input = input("Введите значение: ")
 if user_input.isdigit():
     user_input = int(user_input)
 else:
-    user_input = eval(user_input)
+    user_input = str(user_input)
 
 is_contained = user_input in group_of_values
 
