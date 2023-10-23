@@ -14,8 +14,23 @@ my_dict = {
     'l': 55
 }
 
-max_value = max(my_dict.values())
-min_value = min(my_dict.values())
+max_value = 0
+min_value = 0
 
-print("Макс. значение:", max_value)
-print("Мини. значение:", min_value)
+for value in my_dict.values():
+    if isinstance(value, int):
+        if  value > max_value:
+            max_value = value
+        if  value < min_value:
+            min_value = value
+
+if max_value is not None:
+    print("Максимальное значение:", max_value)
+else:
+    print("Нету чисел для максимума")
+
+if min_value is not None:
+    print("Минимальное значение:", min_value)
+else:
+    print("Нет целых чисел для минимума")
+
