@@ -5,6 +5,10 @@ user_input = input("Введите значение: ")
 
 if user_input.isdigit():
     user_input = int(user_input)
+elif user_input == 'True':
+    user_input = True
+elif user_input == 'False':
+    user_input = False
 else:
     user_input = str(user_input)
 
