@@ -4,9 +4,9 @@ while True:
     user_input = input("Введите целое число: ")
 
     try:
-        user_number = int(user_input)  # Попытка преобразовать ввод в целое число
+        user_number = int(user_input)
         print("Введено корректное целое число:", user_number)
-        break  # Выход из цикла
+        break  
 
     except ValueError:
         print("Ошибка: Неверный формат числа. Пожалуйста, введите целое число.")
