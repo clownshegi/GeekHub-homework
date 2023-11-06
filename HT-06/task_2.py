@@ -14,7 +14,7 @@ def bank(amount, years, percents=10):
 
     amount = round(amount, 2)
     print(f"Сума вкладу після {years} років: {amount:.2f}")
-    return 
+    return
 
 
 initial_deposit = 1000
