@@ -7,12 +7,13 @@
 """
 
 
-def bank(amount, years, percents=0):
+def bank(amount, years, percents=10):
     for year in range(years):
         inter = amount * (percents / 100)
         amount += inter
 
     amount = round(amount, 2)
+    print(f"Сума вкладу після {years} років: {amount:.2f}")
     return amount
 
 
@@ -21,4 +22,3 @@ deposit_years = 5
 river_price = 10
 
 final_amount = bank(initial_deposit, deposit_years, river_price)
-print(f"Кінцева сума вкладу після {deposit_years} років: {final_amount:.2f}")
