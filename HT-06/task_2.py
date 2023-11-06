@@ -14,11 +14,11 @@ def bank(amount, years, percents=10):
 
     amount = round(amount, 2)
     print(f"Сума вкладу після {years} років: {amount:.2f}")
-    return amount
+    return 
 
 
 initial_deposit = 1000
 deposit_years = 5
 river_price = 10
 
-final_amount = bank(initial_deposit, deposit_years, river_price)
+bank(initial_deposit, deposit_years, river_price)
