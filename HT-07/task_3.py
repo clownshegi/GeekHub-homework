@@ -18,7 +18,6 @@
 class ValidationException(Exception):
     pass
 
-
 def validate_username_password(username, password):
     if not (3 <= len(username) <= 50):
         raise ValidationException("Ім'я повинно бути від 3 до 50 символів.")
@@ -27,24 +26,25 @@ def validate_username_password(username, password):
     if username in password:
         raise ValidationException("Пароль не повинен містити ім'я користувача.")
 
-
-user_data = [
-    ("vasya", "wasd"),
-    ("vasya", "vasyapupkin2000"),
-    ("user123", "password123"),
-    ("alice", "Pa$$w0rd"),
-    ("john_doe", "JohnDoe123"),
-    ("username_with_long_name", "1234")
-]
-
-for username, password in user_data:
+def check_credentials(credentials):
     try:
+        username = credentials["username"]
+        password = credentials["password"]
         validate_username_password(username, password)
         status = "OK"
     except ValidationException as e:
         status = str(e)
 
-    print("Name:", username)
-    print("Password:", password)
-    print("Status:", status)
-    print("-----")
+    return f"Name: {username}\nPassword: {password}\nStatus: {status}\n{'-'*5}"
+
+user_data = [
+    {"username": "vasya", "password": "wasd"},
+    {"username": "vasya", "password": "vasyapupkin2000"},
+    {"username": "user123", "password": "password123"},
+    {"username": "alice", "password": "Pa$$w0rd"},
+    {"username": "john_doe", "password": "JohnDoe123"},
+    {"username": "username_with_long_name", "password": "1234"}
+]
+
+for credentials in user_data:
+    print(check_credentials(credentials))
