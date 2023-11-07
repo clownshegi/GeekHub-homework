@@ -18,6 +18,7 @@
 class ValidationException(Exception):
     pass
 
+
 def validate_username_password(username, password):
     if not (3 <= len(username) <= 50):
         raise ValidationException("Ім'я повинно бути від 3 до 50 символів.")
@@ -25,6 +26,7 @@ def validate_username_password(username, password):
         raise ValidationException("Пароль повинен бути не менше 8 символів і містити хоча б одну цифру.")
     if username in password:
         raise ValidationException("Пароль не повинен містити ім'я користувача.")
+
 
 def check_credentials(credentials):
     try:
@@ -35,7 +37,8 @@ def check_credentials(credentials):
     except ValidationException as e:
         status = str(e)
 
-    return f"Name: {username}\nPassword: {password}\nStatus: {status}\n{'-'*5}"
+    return f"Name: {username}\nPassword: {password}\nStatus: {status}\n{'-' * 5}"
+
 
 user_data = [
     {"username": "vasya", "password": "wasd"},
