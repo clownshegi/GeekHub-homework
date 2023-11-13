@@ -17,7 +17,8 @@ def my_range(start, stop, step=1):
     else:
         while start > stop:
             yield start
+            start += step
 
-
-for i in my_range(1, -10, 5):
+for i in my_range(1, 1000, 21):
     print(i)
+

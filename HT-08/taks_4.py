@@ -3,16 +3,15 @@
 і повертає генератор, який буде вертати значення з цієї послідовності, при цьому,
  якщо було повернено останній елемент із послідовності - ітерація починається знову.
 """
-from itertools import cycle
-
-
-def generator(iterable):
-    cyclic_iterator = cycle(iterable)
-    for item in cyclic_iterator:
-        yield item
-
+def my_cycle(iterable):
+    while True:
+        for item in iterable:
+            yield item
 
 sequence = [1, 2, 3]
 
-for elem in generator(sequence):
-    print(elem)
+cyclic_generator = my_cycle(sequence)
+
+for elem in range(10):
+    print(next(cyclic_generator))
+
