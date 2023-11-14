@@ -1,0 +1,4 @@
+This is an example file.
+It contains some text
+that we want to display
+in blocks.
