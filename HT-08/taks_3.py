@@ -3,7 +3,11 @@
 """
 
 
-def my_range(start, stop, step=1):
+def my_range(start, stop=None, step=1):
+    if stop is None:
+        stop = start
+        start = 0
+
     if step == 0:
         raise ValueError("Step cannot be zero")
 
@@ -19,6 +23,6 @@ def my_range(start, stop, step=1):
             yield start
             start += step
 
-for i in my_range(1, 1000, 21):
-    print(i)
 
+for i in my_range(2, 9):
+    print(i)
