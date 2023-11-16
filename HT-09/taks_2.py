@@ -7,21 +7,17 @@
 """
 
 
-def divide_into_blocks(file_content: str, symbol_count: int, is_even: bool) -> list:
+def divide_into_blocks(file_content: str, symbol_count: int) -> list:
     text_block_list = []
-    first_block_start = symbol_count
-    last_block_start = symbol_count * -1
 
-    if is_even:
-        middle_block_start = len(file_content) // 2 - (symbol_count // 2)
-        middle_block_end = len(file_content) // 2 + (symbol_count // 2)
-    else:
-        middle_block_start = (len(file_content) - symbol_count) // 2
-        middle_block_end = (len(file_content) + symbol_count) // 2
+    if symbol_count > len(file_content):
+        print("Помилка: Кількість символів для блоку перевищує довжину файлу.")
+        return "Зупинка роботи."
 
-    text_block_list.append(file_content[:first_block_start])
-    text_block_list.append(file_content[middle_block_start:middle_block_end])
-    text_block_list.append(file_content[last_block_start:])
+    for i in range(3):
+        start_index = i * symbol_count
+        end_index = start_index + symbol_count
+        text_block_list.append(file_content[start_index:end_index])
 
     return text_block_list
 
@@ -57,7 +53,7 @@ def create_blocks_from_file(file_path: str, symbol_count: int):
     if custom_file_existence_check(file_path) is False:
         return "Зупинка роботи."
 
-    if len(file_content) < symbol_count * 3:
+    if len(file_content) < symbol_count:
         print("Помилка: Недостатня кількість символів у файлі для трьох блоків.")
         return "Зупинка роботи."
 
@@ -77,5 +73,5 @@ def create_blocks_from_file(file_path: str, symbol_count: int):
     return text_block_list
 
 
-result = create_blocks_from_file(file_path="example.txt", symbol_count=2)
+result = create_blocks_from_file(file_path="example.txt", symbol_count=10)
 print(result)
