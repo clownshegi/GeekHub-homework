@@ -20,22 +20,22 @@
       Red        Green
 """
 import time
-
-
+import random
 def traffic_light_emulator():
-    car_light = ["Red", "Yellow", "Green", "Green", "Red", "Red"]
-    ped_light = ["Green", "Red", "Red", "Green", "Red", "Green"]
+    while True:
+        car_color = random.choice(["Red", "Yellow", "Green"])
 
-    for car_color, ped_color in zip(car_light, ped_light):
         if car_color == "Red":
             ped_color = "Green"
         elif car_color == "Green":
             ped_color = "Red"
         elif car_color == "Yellow":
             ped_color = "Red"
+
         print(f"{car_color:10}{ped_color}")
         time.sleep(1)
 
 
 if __name__ == "__main__":
     traffic_light_emulator()
+
