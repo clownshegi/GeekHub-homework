@@ -1,5 +1,5 @@
 """
-Створити клас Calc, який буде мати атребут last_result та 4 методи. Методи повинні виконувати математичні операції
+ Створити клас Calc, який буде мати атребут last_result та 4 методи. Методи повинні виконувати математичні операції
  з 2-ма числами, а саме додавання, віднімання, множення, ділення.
 - Якщо під час створення екземпляру класу звернутися до атребута last_result він повинен повернути пусте значення.
 - Якщо використати один з методів - last_result повенен повернути результат виконання ПОПЕРЕДНЬОГО методу.
@@ -12,81 +12,75 @@
     3 * 4
     last_result --> 6
 """
+
+
 class Calc:
     """
-    Клас Calc призначений для виконання математичних операцій та збереження результатів.
+    Клас Calc для виконання математичних операцій та збереження результату попередньої операції.
 
+    Атрибути:
+        last_result  Зберігає результат останньої проведеної операції. Початкове значення - None.
     """
 
     def __init__(self):
-        """
-        Ініціалізує клас Calc з початковим значенням last_result, який дорівнює None.
-        """
+        """Ініціалізує клас Calc, встановлюючи початкове значення last_result на None."""
         self.last_result = None
 
     def add(self, a, b):
         """
-        Додає два числа.
+        Виконує операцію додавання двох чисел та зберігає результат як попередній результат.
 
-        Args:
-            a (int, float): Перше число.
-            b (int, float): Друге число.
-
-        Returns:
-            int, float: Результат додавання a та b.
+        Приклад:
+            calculator.add(2, 3)
+            2 + 3
+            last_result --> None
         """
-        self.last_result = a + b
-        return self.last_result
+        result = a + b
+        prev_result = self.last_result
+        self.last_result = result
+        if prev_result is None:
+            print(f"{a} + {b}\nlast_result --> None")
+        else:
+            print(f"{a} + {b}\nlast_result --> {prev_result}")
+        return self
 
     def subtract(self, a, b):
-        """
-        Віднімає одне число від іншого.
-
-        Args:
-            a (int, float): Перше число.
-            b (int, float): Число, яке потрібно відняти від першого числа.
-
-        Returns:
-            int, float: Результат віднімання b від a.
-        """
-        self.last_result = a - b
-        return self.last_result
+        """Віднімає число b від числа a."""
+        result = a - b
+        prev_result = self.last_result
+        self.last_result = result
+        if prev_result is None:
+            print(f"{a} - {b}\nlast_result --> None")
+        else:
+            print(f"{a} - {b}\nlast_result --> {prev_result}")
+        return self
 
     def multiply(self, a, b):
-        """
-        Перемножує два числа.
-
-        Args:
-            a (int, float): Перше число.
-            b (int, float): Друге число.
-
-        Returns:
-            int, float: Результат множення a на b.
-        """
-        self.last_result = a * b
-        return self.last_result
+        """Множить число a на число b."""
+        result = a * b
+        prev_result = self.last_result
+        self.last_result = result
+        if prev_result is None:
+            print(f"{a} * {b}\nlast_result --> None")
+        else:
+            print(f"{a} * {b}\nlast_result --> {prev_result}")
+        return self
 
     def divide(self, a, b):
-        """
-        Ділить одне число на інше.
-
-        Args:
-            a (int, float): Число, яке потрібно поділити.
-            b (int, float): Число, на яке потрібно поділити.
-.
-        """
+        """Ділить число a на число b."""
         if b == 0:
-            return "Error: Не можна ділити на нуль"
-        self.last_result = a / b
-        return self.last_result
+            print("Cannot divide by zero")
+            return self
+        result = a / b
+        prev_result = self.last_result
+        self.last_result = result
+        if prev_result is None:
+            print(f"{a} / {b}\nlast_result --> None")
+        else:
+            print(f"{a} / {b}\nlast_result --> {prev_result}")
+        return self
 
 
 calculator = Calc()
 
-print(calculator.last_result)  # Виведе None
-print(calculator.add(1, 1))  # Додає 1 та 1, результат 2
-print(calculator.last_result)  # Виведе 2
-print(calculator.multiply(2, 3))  # Множить 2 на попередній результат 2, результат 6
-print(calculator.last_result)  # Виведе 6
-print(calculator.multiply(3, 4))  # Множить 3 на попередній результат 6, результат 18
-print(calculator.last_result)  # Виведе 18
+calculator.add(1, 1).multiply(2, 3).multiply(3, 4)
