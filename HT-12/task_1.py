@@ -380,9 +380,9 @@ while True:
             print("Ви успішно зареєструвалися\n")
             random_number = random.randint(1, 100)
             if random_number <= 10:
-                self.sql.execute(
+                sql.execute(
                     "UPDATE users SET account_balance = account_balance + ? WHERE login = ?",
-                    (100,  login),
+                    (100, user_login),
                 )
                 db.commit()
                 print("Вам начислено 100 гривен на счет\n")
