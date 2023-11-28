@@ -382,7 +382,7 @@ while True:
             if random_number <= 10:
                 self.sql.execute(
                     "UPDATE users SET account_balance = account_balance + ? WHERE login = ?",
-                    (100, self.login),
+                    (100, login),
                 )
                 db.commit()
                 print("Вам начислено 100 гривен на счет\n")
