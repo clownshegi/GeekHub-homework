@@ -71,7 +71,7 @@ class User:
 
         atm_money = sql.fetchone()
 
-        while (i > 0 and remaining_amount > 0):
+        while i > 0 and remaining_amount > 0:
 
             remaining_amount = amount
 
@@ -88,7 +88,10 @@ class User:
                 available_denominations_copy.insert(4, 60)
 
             for denom in sorted(available_denominations_copy, reverse=True):
-                count = min(remaining_amount // denom, atm_money[available_denominations_copy.index(denom)])
+                count = min(
+                    remaining_amount // denom,
+                    atm_money[available_denominations_copy.index(denom)],
+                )
                 if count > 0:
                     to_withdraw[denom] = count
                     remaining_amount -= count * denom
@@ -101,7 +104,9 @@ class User:
             i -= 1
 
         if remaining_amount == 0:
-            sql.execute("UPDATE users SET money = money - ? WHERE login=?", (amount, login))
+            sql.execute(
+                "UPDATE users SET money = money - ? WHERE login=?", (amount, login)
+            )
             db.commit()
             print(f"Успішно знято {amount} грн\n")
 
@@ -118,16 +123,19 @@ class User:
             for denom, count in to_withdraw.items():
                 if denom == 60:
                     sql.execute(
-                        f"UPDATE atm SET banknote20 = banknote20 - {3} WHERE banknote20 >= {3}")
+                        f"UPDATE atm SET banknote20 = banknote20 - {3} WHERE banknote20 >= {3}"
+                    )
                 else:
                     sql.execute(
-                        f"UPDATE atm SET banknote{denom} = banknote{denom} - {count} WHERE banknote{denom} >= {count}")
+                        f"UPDATE atm SET banknote{denom} = banknote{denom} - {count} WHERE banknote{denom} >= {count}"
+                    )
 
                 db.commit()
 
-
         else:
-            print(f"Неможливо зняти суму {amount} грн через обмеження в наявності купюр у банкоматі.\n")
+            print(
+                f"Неможливо зняти суму {amount} грн через обмеження в наявності купюр у банкоматі.\n"
+            )
 
 
 class ATM:
@@ -376,7 +384,7 @@ while True:
                     "UPDATE users SET account_balance = account_balance + ? WHERE login = ?",
                     (100, self.login),
                 )
-                self.db.commit()
+                db.commit()
                 print("Вам начислено 100 гривен на счет\n")
             user = User(user_login, user_password)
             atm.user_menu(user_login)
