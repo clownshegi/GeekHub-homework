@@ -9,6 +9,12 @@ class CustomList(list):
     def __init__(self, *args):
         super().__init__(args)
 
+    def insert(self, i, x):
+        if i <= 0:
+            raise IndexError("Index starts from 1")
+        else:
+            super().insert(i - 1, x)
+
     def __getitem__(self, index):
         if index == 0:
             raise IndexError("Index starts from 1")
