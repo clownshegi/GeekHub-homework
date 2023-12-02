@@ -41,7 +41,7 @@ for page in range(1, 11):
             'bio': bio
         })
 
-with open('quotes_ua.csv', 'w', encoding='utf-16') as file:
+with open('quotes.csv', 'w', encoding='utf-16') as file:
     writer = csv.writer(file)
 
     for quote in quotes:
@@ -54,4 +54,4 @@ with open('quotes_ua.csv', 'w', encoding='utf-16') as file:
 
 print('parsing finished')
 
-print('Парсинг закінчено, цитати збережено у quotes_ua.csv')
+print('Парсинг закінчено, цитати збережено у quotes.csv')
