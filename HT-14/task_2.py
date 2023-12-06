@@ -22,6 +22,9 @@ def get_dates():
         date_text = input("Введіть дату (РРРР-ММ-ДД): ")
         try:
             date = datetime.datetime.strptime(date_text, "%Y-%m-%d")
+            if is_future_date(date):
+                print("Введена дата з майбутнього\n")
+                return get_dates()
             return [date]
         except ValueError:
             print("Невірний формат дати!\n")
@@ -51,6 +54,12 @@ def get_dates():
     else:
         print("\nНевірний вибір! Виберіть 1 або 2.")
         return get_dates()
+
+
+def is_future_date(date):
+    today = datetime.datetime.now().date()
+    return date.date() > today
+
 
 
 def get_currency():
