@@ -34,8 +34,16 @@ def get_dates():
             start_text = input("Початкова дата (РРРР-ММ-ДД): ")
             start_date = datetime.datetime.strptime(start_text, "%Y-%m-%d")
 
+            if is_future_date(start_date):
+                print("Введена дата з майбутнього\n")
+                return get_dates()
+
             end_text = input("Кінцева дата (РРРР-ММ-ДД): ")
             end_date = datetime.datetime.strptime(end_text, "%Y-%m-%d")
+
+            if is_future_date(end_date):
+                print("Введена дата з майбутнього\n")
+                return get_dates()
 
             if start_date > end_date:
                 print("Початкова дата повинна бути меншою за кінцеву!")
@@ -59,7 +67,6 @@ def get_dates():
 def is_future_date(date):
     today = datetime.datetime.now().date()
     return date.date() > today
-
 
 
 def get_currency():
