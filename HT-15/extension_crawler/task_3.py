@@ -7,4 +7,4 @@
 import subprocess
 
 if __name__ == "__main__":
-    subprocess.run(["scrapy", "crawl", "google", "-O", "info.csv"])
+    subprocess.run(["scrapy", "crawl", "my_google_spider", "-O", "info.csv"])
