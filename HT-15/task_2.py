@@ -40,9 +40,11 @@ def write_to_csv(data):
 
 
 def find_info():
+    page = 1
+
     while True:
         page_content = get_data(BASE_URL)
-        print("Код працює, все іде по плану")
+        print(f"Сторінка {page}")
         soup = BeautifulSoup(page_content, features="html.parser")
         rows = soup.find_all("td", class_="field_domain")
         domain_text_list = [row.text for row in rows]
@@ -53,7 +55,7 @@ def find_info():
         if not next_page:
             print("Збір даних завершено!")
             break
-
+        page += 1
         time.sleep(WAIT_TIME)
 
 
