@@ -1,179 +1,168 @@
+"""
+Автоматизувати процес замовлення робота за допомогою Selenium
+1. Отримайте та прочитайте дані з "https://robotsparebinindustries.com/orders.csv".
+Увага! Файл має бути прочитаний з сервера кожного разу при запускі скрипта, не зберігайте файл локально.
+2. Зайдіть на сайт "https://robotsparebinindustries.com/"
+3. Перейдіть у вкладку "Order your robot"
+4. Для кожного замовлення з файлу реалізуйте наступне:
+    - закрийте pop-up, якщо він з'явився. Підказка: не кожна кнопка його закриває.
+    - оберіть/заповніть відповідні поля для замовлення
+    - натисніть кнопку Preview та збережіть зображення отриманого робота.
+    Увага! Зберігати треба тільки зображення робота, а не всієї сторінки сайту.
+    - натисніть кнопку Order та збережіть номер чеку. Увага! Інколи сервер тупить і видає помилку,
+    але повторне натискання кнопки частіше всього вирішує проблему. Дослідіть цей кейс.
+    - переіменуйте отримане зображення у формат <номер чеку>_robot (напр. 123456_robot.jpg).
+    Покладіть зображення в директорію output (яка має створюватися/очищатися під час запуску скрипта).
+    - замовте наступного робота (шляхом натискання відповідної кнопки)
+"""
 import os
 import shutil
+import time
 from pathlib import Path
 from io import BytesIO
 from PIL import Image
 import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
-
-BASE_URL = "https://robotsparebinindustries.com/"
-OUTPUT_DIR = Path(__file__).resolve().parent / 'generated_images'
-SERVICE = ChromeService(ChromeDriverManager().install())
-IMAGE_WIDTH = 342
-IMAGE_HEIGHT = 200
+from selenium.webdriver.support.wait import WebDriverWait
 
 
-class BotCustomizer:
+class RobotCustomizer:
     def __init__(self):
-        self.output_directory = OUTPUT_DIR
+        self.output_dir = Path(__file__).resolve().parent / 'generated_images'
         self.current_image = None
-        self.browser = webdriver.Chrome(service=SERVICE)
-        self.browser.get(BASE_URL)
+        self.browser = webdriver.Chrome()
+        self.browser.get("https://robotsparebinindustries.com/")
         self.clean_output()
         self.setup_output()
 
     def clean_output(self):
-        if os.path.exists(self.output_directory):
-            shutil.rmtree(self.output_directory)
+        if os.path.exists(self.output_dir):
+            shutil.rmtree(self.output_dir)
 
     def setup_output(self):
-        if not os.path.exists(self.output_directory):
-            os.makedirs(self.output_directory)
+        if not os.path.exists(self.output_dir):
+            os.makedirs(self.output_dir)
 
-    def order_navigation(self):
+    def order(self):
         nav_links = self.browser.find_elements(By.CLASS_NAME, "nav-link")
-        order_robot_element = nav_links[-1]
-        order_robot_element.click()
+        nav_links[-1].click()
 
-    def wait_for_element(self, xpath_element):
-        wait = WebDriverWait(self.browser, 20).until(
-            EC.visibility_of_element_located((
-                By.XPATH,
-                xpath_element
-            )
-            )
-        )
-        return wait
+    def wait_for(self, xpath):
+        return EC.visibility_of_element_located((By.XPATH, xpath))(self.browser)
 
     def close_modal(self):
-        xpath = "//button[@class='btn btn-danger' and text()='I guess so...']"
+        self.wait_for("//button[text()='I guess so...']").click()
 
-        close_button = self.wait_for_element(xpath)
-        close_button.click()
+    def customize(self, data):
+        head, body, legs, address = data
+        self.browser.find_element(By.XPATH, f"//option[@value='{head}']").click()
+        self.browser.find_element(By.XPATH, f"//input[@value='{body}']/ancestor::label").click()
+        self.browser.find_elements(By.CLASS_NAME, "form-control")[0].send_keys(legs)
+        self.browser.find_elements(By.CLASS_NAME, "form-control")[1].send_keys(address)
+        time.sleep(1)
 
-    def customize_robot_order(self, data_args):
-        head_value, body_value, legs_value, address_value = data_args
+    def preview(self):
+        while True:
+            try:
+                self.browser.find_element(By.ID, "preview").click()
+                self.wait_for("//div[@id='robot-preview-image']")
+                break
+            except:
+                pass
 
-        input_elements = self.browser.find_elements(By.CLASS_NAME, "form-control")
+    def place_order(self):
 
-        head_element = self.browser.find_element(By.XPATH, f"//option[@value={head_value}]")
-        body_element = self.browser.find_element(By.XPATH, f"//input[@value={body_value}]/ancestor::label")
-        legs_element = input_elements[0]
-        address_element = input_elements[1]
+        error_msg = (By.CSS_SELECTOR, ".alert.alert-danger")
 
-        head_element.click()
-        body_element.click()
-        legs_element.send_keys(legs_value)
-        address_element.send_keys(address_value)
+        while True:
+            try:
+                self.browser.find_element(By.ID, "order").click()
+            except:
+                pass
 
-    def preview_activation(self):
-        try:
-            while True:
-                preview_button = self.browser.find_element(By.XPATH, f'//button[@id="preview"]')
-                self.browser.execute_script("arguments[0].click();", preview_button)
-                xpath = "//div[@id='robot-preview-image']"
-                image = self.wait_for_element(xpath).find_element(By.XPATH, xpath)
-                if image:
-                    break
-        except Exception:
-            pass
+            try:
+                WebDriverWait(self.browser, 1).until(EC.invisibility_of_element(error_msg))
+                break
+            except:
+                pass
 
-    def order_activation(self):
-        try:
-            while True:
-                order_button = self.browser.find_element(By.XPATH, '//button[@id="order"]')
-                self.browser.execute_script("arguments[0].click();", order_button)
-        except Exception:
-            pass
-
-    def get_order_status(self):
+    def wait_for(self, xpath):
+        return WebDriverWait(self.browser, 10).until(
+            EC.visibility_of_element_located((By.XPATH, xpath))
+        )
+    def get_status(self):
         xpath = "//p[@class='badge badge-success']"
-        status = self.wait_for_element(xpath)
-        return status.find_element(By.XPATH, xpath).text
 
-    def generate_robot_image(self, data_args):
-        image_urls = [
-            f"{BASE_URL}heads/{data_args[0]}.png",
-            f"{BASE_URL}bodies/{data_args[1]}.png",
-            f"{BASE_URL}legs/{data_args[2]}.png"
-        ]
+        element = self.wait_for_element(xpath)
+        if element:
+            return element.text
+        else:
+            return ""
+
+    def wait_for_element(self, xpath):
+        wait = WebDriverWait(self.browser, 20)
+        element = wait.until(EC.visibility_of_element_located((By.XPATH, xpath)))
+        return element
+
+    def generate_image(self, data):
+        urls = [f"https://robotsparebinindustries.com/{part}/{data[i]}.png" for i, part in
+                enumerate(["heads", "bodies", "legs"])]
 
         images = []
-        for url in image_urls:
-            response = requests.get(url)
+        for url in urls:
+            img = Image.open(BytesIO(requests.get(url).content))
+            img = img.resize((200, 200))
+            images.append(img)
 
-            img = Image.open(BytesIO(response.content))
-            img_resized = img.resize((IMAGE_HEIGHT, IMAGE_HEIGHT))
-            images.append(img_resized)
+        combined = Image.new('RGB', (max(img.width for img in images), sum(img.height for img in images)))
 
-        widths, heights = zip(*(i.size for i in images))
-        combined_image = Image.new('RGB', (max(widths), sum(heights)))
-
-        y_offset = 0
+        y = 0
         for img in images:
-            combined_image.paste(img, (0, y_offset))
-            y_offset += img.size[1]
+            combined.paste(img, (0, y))
+            y += img.height
 
-        self.current_image = combined_image
+        self.current_image = combined
 
-        y_offset = 0
-        for img in images:
-            combined_image.paste(img, (0, y_offset))
-            y_offset += img.size[1]
+    def save_image(self):
+        status = self.get_status()
+        self.current_image.save(self.output_dir / f"_{status}_robot.jpg")
 
-        self.current_image = combined_image
-
-    def save_generated_image(self):
-        status = self.get_order_status()
-        file_name = f"{self.output_directory}/_{status}_robot.jpg"
-        self.current_image.save(file_name)
-
-    def process_robot_orders(self):
-        data = self.retrieve_robot_data(BASE_URL)
-        for data_item in data:
+    def process(self):
+        data = self.get_data("https://robotsparebinindustries.com/")
+        for item in data:
             self.close_modal()
-            self.customize_robot_order(data_item)
-            self.preview_activation()
-            self.generate_robot_image(data_item)
-            self.order_activation()
-            self.save_generated_image()
-            self.navigate_to_next_robot()
+            self.customize(item)
+            self.preview()
+            self.generate_image(item)
+            self.place_order()
+            self.save_image()
+            self.next()
 
-    def navigate_to_next_robot(self):
-        next_robot_button = self.browser.find_element(
-            By.XPATH,
-            "//button[@id='order-another']"
-        )
-        self.browser.execute_script("arguments[0].click();", next_robot_button)
+    def click_make_order(self):
+        try:
+            while True:
+                order_button = self.driver.find_element(By.XPATH, '//button[@id="order"]')
+                self.driver.execute_script("arguments[0].click();", order_button)
+        except Exception:
+            pass
 
-    def start_process(self):
-        self.order_navigation()
-        self.process_robot_orders()
+    def get_data(self, url):
+        response = requests.get(url + "orders.csv")
+        data = response.text.split("\n")[1:]
+        return [d.split(",")[1:] for d in data]
 
-    @staticmethod
-    def retrieve_robot_data(url):
-        csv_data = []
+    def next(self):
+        self.browser.find_element(By.ID, "order-another").click()
 
-        csv_url = "orders.csv"
-        request_url = url + csv_url
-        response = requests.get(url=request_url)
-        csv_list = response.text.split("\n")
-        csv_list.pop(0)
-
-        for item in csv_list:
-            new_list = item.split(",")[1:]
-            csv_data.append(new_list)
-
-        return csv_data
+    def start(self):
+        self.order()
+        self.process()
 
     def __del__(self):
         self.browser.quit()
 
 
-custom_bot = BotCustomizer()
-custom_bot.start_process()
+bot = RobotCustomizer()
+bot.start()
