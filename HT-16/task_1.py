@@ -160,9 +160,9 @@ class RobotCustomizer:
         self.order()
         self.process()
 
-    def __del__(self):
-        self.browser.quit()
+
 
 
 bot = RobotCustomizer()
 bot.start()
+bot.browser.quit()
