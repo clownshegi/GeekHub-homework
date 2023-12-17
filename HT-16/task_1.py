@@ -30,7 +30,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 class RobotCustomizer:
     def __init__(self):
-        self.output_dir = Path(__file__).resolve().parent / 'generated_images'
+        self.output_dir = Path(__file__).resolve().parent / "generated_images"
         self.current_image = None
         self.browser = webdriver.Chrome()
         self.browser.get("https://robotsparebinindustries.com/")
@@ -58,7 +58,9 @@ class RobotCustomizer:
     def customize(self, data):
         head, body, legs, address = data
         self.browser.find_element(By.XPATH, f"//option[@value='{head}']").click()
-        self.browser.find_element(By.XPATH, f"//input[@value='{body}']/ancestor::label").click()
+        self.browser.find_element(
+            By.XPATH, f"//input[@value='{body}']/ancestor::label"
+        ).click()
         self.browser.find_elements(By.CLASS_NAME, "form-control")[0].send_keys(legs)
         self.browser.find_elements(By.CLASS_NAME, "form-control")[1].send_keys(address)
         time.sleep(1)
@@ -83,7 +85,9 @@ class RobotCustomizer:
                 pass
 
             try:
-                WebDriverWait(self.browser, 1).until(EC.invisibility_of_element(error_msg))
+                WebDriverWait(self.browser, 1).until(
+                    EC.invisibility_of_element(error_msg)
+                )
                 break
             except:
                 pass
@@ -108,8 +112,10 @@ class RobotCustomizer:
         return element
 
     def generate_image(self, data):
-        urls = [f"https://robotsparebinindustries.com/{part}/{data[i]}.png" for i, part in
-                enumerate(["heads", "bodies", "legs"])]
+        urls = [
+            f"https://robotsparebinindustries.com/{part}/{data[i]}.png"
+            for i, part in enumerate(["heads", "bodies", "legs"])
+        ]
 
         images = []
         for url in urls:
@@ -117,7 +123,9 @@ class RobotCustomizer:
             img = img.resize((200, 200))
             images.append(img)
 
-        combined = Image.new('RGB', (max(img.width for img in images), sum(img.height for img in images)))
+        combined = Image.new(
+            "RGB", (max(img.width for img in images), sum(img.height for img in images))
+        )
 
         y = 0
         for img in images:
@@ -144,7 +152,9 @@ class RobotCustomizer:
     def click_make_order(self):
         try:
             while True:
-                order_button = self.driver.find_element(By.XPATH, '//button[@id="order"]')
+                order_button = self.driver.find_element(
+                    By.XPATH, '//button[@id="order"]'
+                )
                 self.driver.execute_script("arguments[0].click();", order_button)
         except Exception:
             pass
