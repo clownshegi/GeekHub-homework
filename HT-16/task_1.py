@@ -92,6 +92,7 @@ class RobotCustomizer:
         return WebDriverWait(self.browser, 10).until(
             EC.visibility_of_element_located((By.XPATH, xpath))
         )
+
     def get_status(self):
         xpath = "//p[@class='badge badge-success']"
 
@@ -159,8 +160,6 @@ class RobotCustomizer:
     def start(self):
         self.order()
         self.process()
-
-
 
 
 bot = RobotCustomizer()
