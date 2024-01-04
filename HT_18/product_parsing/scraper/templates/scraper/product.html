@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ product.product_name }} Details</title>
+</head>
+<style>
+    #product-details {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 60%;
+        margin-left: 650px;
+        margin-top: -325px;
+    }
+
+    #product-details td,
+    #product-details th {
+        border: 3px solid rgba(102, 205, 176, 0.62);
+        padding: 8px;
+    }
+
+    #product-details tr:hover {
+        background-color: rgba(102, 205, 176, 0.62);
+    }
+
+    #product-details th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        color: white;
+    }
+
+    .product-info {
+        margin-left: -500px;
+        margin-top: 300px;
+    }
+
+    .back {
+        margin-left: 150px;
+        margin-top: 10px;
+    }
+
+    .back-link {
+        text-decoration: none;
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: rgba(102, 205, 176, 0.62);
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    }
+
+    nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        border-radius: 5px;
+        z-index: 1000;
+    }
+
+
+
+    .nav-link {
+        text-decoration: none;
+        color: white;
+    }
+
+    #content {
+        margin-top: 60px;
+    }
+
+    .header {
+        padding: 50px;
+        text-align: center;
+
+    }
+</style>
+
+<body>
+    <nav>
+        <button> <a class="nav-link" href="{% url 'scraper:add_product' %}">ADD PRODUCT</a></button>
+        <button> <a class="nav-link" href="{% url 'scraper:show_my_products' %}">MY PRODUCTS</a></button>
+    </nav>
+
+    <div class="header">
+        <h1>FIND YOUR PRODUCT</h1>
+    </div>
+
+    <div class="product-info">
+        <table id="product-details">
+            <tr>
+                <th>Product ID:</th>
+                <td>{{ product.product_id }}</td>
+            </tr>
+            <tr>
+                <th>Brand:</th>
+                <td>{{ product.brand_name }}</td>
+            </tr>
+            <tr>
+                <th>Product Name:</th>
+                <td>{{ product.product_name }}</td>
+            </tr>
+            <tr>
+                <th>Category:</th>
+                <td>{{ product.category }}</td>
+            </tr>
+            <tr>
+                <th>Price:</th>
+                <td>{{ product.discounted_price }}</td>
+            </tr>
+            <tr>
+                <th>Product URL:</th>
+                <td><a class="site-link" href="{{ product.product_link }}" target="_blank">{{ product.product_link
+                        }}</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="back">
+        <button><a class="back-link" href="{% url 'scraper:show_my_products' %}">Back</a></button>
+    </div>
+
+</body>
+
+</html>

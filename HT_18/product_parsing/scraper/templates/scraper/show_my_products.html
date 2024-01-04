@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      border-radius: 5px;
+      z-index: 1000;
+    }
+
+
+    .nav-link {
+      text-decoration: none;
+      color: white;
+    }
+
+    .text {
+      margin-left: 550px;
+      margin-top: 70px;
+    }
+
+    .info {
+      margin-left: 550px;
+      margin-top: -10px;
+    }
+
+    a.product:link {
+      background-color: rgba(12, 58, 203, 0.6);
+      color: #090002;
+      padding: 5px;
+      margin: -5px;
+      text-align: left;
+      text-decoration: none;
+      display: table;
+      border-radius: 8px;
+    }
+
+    a.product:visited {
+      background-color: rgba(141, 238, 221, 0.54);
+      color: #090002;
+      padding: 5px;
+      margin: -5px;
+      text-align: left;
+      text-decoration: none;
+      display: table;
+      border-radius: 8px;
+    }
+
+    a.product:hover {
+      background-color: rgba(248, 248, 248, 0.49);
+      color: rgb(9, 0, 2);
+    }
+
+    .footer {
+      background-color: #6c60c7ab;
+      color: white;
+      padding: 20px;
+      width: 100%;
+      text-align: center;
+      position: fixed;
+      bottom: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <button> <a class="nav-link" href="{% url 'scraper:add_product' %}">ADD PRODUCT</a></button>
+    <button> <a class="nav-link" href="{% url 'scraper:show_my_products' %}">MY PRODUCTS</a></button>
+  </nav>
+
+  <div class="text">
+    <h1>All products list</h1>
+  </div>
+
+  <div class="info">
+    {% for product in products %}
+    <a class="product" href="{% url 'scraper:product_data' pk=product.pk %}" target="_parent">
+      <b> {{ product.id }}.</b> {{ product.product_name }} - <b>{{ product.discounted_price }}</b></a><br>
+    {% endfor %}
+  </div>
+
+</body>
+
+</html>
