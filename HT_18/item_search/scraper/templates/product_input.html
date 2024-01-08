@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Додати продукти</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ecf0f1;
+            margin: 20px;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .form-field {
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .success-message {
+            margin-top: 10px;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .success-green {
+            background-color: #27ae60;
+            color: #fff;
+        }
+
+        .success-red {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+
+        .back-to-list {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .back-to-list a {
+            color: #3498db;
+            text-decoration: none;
+        }
+    </style>
+    <script>
+        function hideMessage() {
+            var successMessage = document.getElementById('success-message');
+            successMessage.style.display = 'none';
+        }
+
+        window.onload = function() {
+            var successMessage = document.getElementById('success-message');
+            if (successMessage) {
+                setTimeout(hideMessage, 1500);  // Ховаємо повідомлення через 1,5 секунди (1500 мілісекунд)
+            }
+        };
+    </script>
+</head>
+<body>
+
+<h2>Додати продукти в базу збережених</h2>
+
+<form method="post" action="{% url 'scraper:product_input' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Відправити</button>
+
+    {% if success_message %}
+        <div id="success-message" class="success-message
+        {% if success_message == 'Дані успішно відправлені!' %}success-green
+        {% elif success_message == 'Дозволені тільки цифри та кома!' %}success-red
+        {% endif %}">
+            <p>{{ success_message }}</p>
+        </div>
+    {% endif %}
+
+</form>
+
+<div class="back-to-list">
+    <p><a href="{% url 'scraper:products_list' %}">Список продуктів</a></p>
+</div>
+
+</body>
+</html>
